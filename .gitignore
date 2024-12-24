@@ -1,0 +1,13 @@
+# 환경 변수 파일
+.env
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# IDE 설정 파일
+.vscode/
+.idea/
+
+# 파이썬 가상 환경
+venv/
