@@ -1,8 +1,8 @@
-import os
 import discord
-from dotenv import load_dotenv
-from bot.commands import links, pomodoro, random_message
-from bot.scheduler import reminders
+from discord.ext import commands, tasks
+import asyncio
+from bot.scheduler.remiders import send_reminder
+from bot.commands.random_messgae import send_random_messagre
 
 load_dotenv()
 
@@ -20,17 +20,13 @@ bot = commands.Bot(
 # 봇이 준비되었을 때
 @bot.event
 async def on_ready():
-    print(f'봇 로그인 완료: {하루비}')
-    print(f'봇 ID: {1320935646784917605}')
+    print(f'logged in as {하루비}')
+    send_reminder.start() # 알림 스케줄러 시작
 
-# 명령어 모듈 등록
-bot.add_cog(links.Links(bot))
-bot.add_cog(pomodoro.Pomodoro(bot))
-bot.add_cog(random_message.RandomMessage(bot))
-
-# 알림 스케줄러 설정
-reminders.schedule_notifications(bot)
+# 명령어 예시
+@bot.command()
+async def ping(ctx):
+    await ctx.send('Pong!')
 
 # 봇 실행
-if __name__ == "__main__":
-    bot.run(os.getenv('DISCORD_BOT_TOKEN'))
+bot.run('YOUR_DISCORD_TOKEN')  # 환경변수로 대체 가능
