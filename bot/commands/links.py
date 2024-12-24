@@ -1,37 +1,32 @@
 import discord
 from discord.ext import commands
-import json
+from bot.commands.links import links, add_link, remove_link
+from bot.commands.pomodoro import pomodoro
+from bot.commands.random_message import random_message
+from bot.commands.routine import routine
 
-class Links(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-        self.links_file = 'data/links.json'
-    
-    @commands.command()
-    async def links(self, ctx):
-        "사용자 링크 목록 표시"
-        with open(self.links_file, encoding='utf-8') as file:
-            links = json.lad(file)
+# 봇 인텐트 설정
+intents = discord.Intents.default()
+intents.message_content = True  # 메시지 내용 읽기 권한 활성화
 
-        user_links = links.get(str(ctx.author.id), {})
-        if user_links:
-            links_str = '\n'.join(f"{key}: {value}" for key, value in user_links.items())
-            await ctx.send(f'당신의 링크 목록 : \n{links_str}')
-        else:
-            await ctx.send("아직 등록된 링크가 없습니다.🥲")
+# 봇 초기화
+bot = commands.Bot(
+    command_prefix="/",  # 명령어 접두사
+    intents=intents,  # 인텐트 설정
+    case_insensitive=True  # 대소문자 구분 없이 명령어 처리
+)
 
-    @commands.command()
-    async def add_link(self, ctx, platfrom: str, url: str):
-        """사용자 링크를 추가"""
-        with open(self.links_file, 'r', encoding='utf-8') as file:
-            links = json.load(file)
-        
-        user_id = str(ctx.author.id)
-        if user_id not in links:
-            links[user_id] = {}
-        links[user_id][platfrom] = url
+# 명령어 등록
+bot.add_command(links)
+bot.add_command(add_link)
+bot.add_command(remove_link)
+bot.add_command(pomodoro)
+bot.add_command(random_message)
+bot.add_command(routine)
 
-        with open(self.links_file, 'w', encoding='utf-8') as file:
-            json.dump(links, file, ensure_ascii=False, indent=4)
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user}')
 
-        await ctx.send(f"{platfrom} 링크가 성공적으로 추가되었습니다!✨")
+# 봇 실행
+bot.run('YOUR_DISCORD_TOKEN')  # 환경변수로 대체 가능
