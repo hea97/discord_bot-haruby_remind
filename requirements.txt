@@ -1,0 +1,9 @@
+discord.py==2.4.0
+apscheduler==3.11.0
+notion-client==2.3.0
+python-dotenv==1.0.1
+flet==0.24.1
+flet-core==0.24.1
+flet-runtime==0.24.1
+packaging>=23.0,<24.0
+requests==2.32.3
